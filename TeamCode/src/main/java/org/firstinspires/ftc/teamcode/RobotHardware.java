@@ -31,8 +31,11 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
+
+import org.firstinspires.ftc.robotcontroller.external.samples.BasicOmniOpMode_Linear;
 
 /*
  * This file works in conjunction with the External Hardware Class sample called: ConceptExternalHardwareClass.java
@@ -56,12 +59,13 @@ import com.qualcomm.robotcore.util.Range;
 public class RobotHardware {
 
     /* Declare OpMode members. */
-    private LinearOpMode tra3nrex_stdop = null;   // gain access to methods in the calling OpMode.
+    private LinearOpMode tra3nrex_omniop = null;   // gain access to methods in the calling OpMode.
 
     // Define Motor and Servo objects  (Make them private so they can't be accessed externally)
-    private DcMotor leftDrive   = null;
-    private DcMotor rightDrive  = null;
-    private DcMotor armMotor = null;
+    private DcMotor leftFrontDrive = null;
+    private DcMotor rightFrontDrive = null;
+    private DcMotor leftBackDrive = null;
+    private DcMotor rightBackDrive = null;
     private Servo   leftHand = null;
     private Servo   rightHand = null;
 
@@ -72,8 +76,8 @@ public class RobotHardware {
     public static final double ARM_DOWN_POWER  = -0.45 ;
 
     // Define a constructor that allows the OpMode to pass a reference to itself.
-    public RobotHardware (LinearOpMode opmode) {
-        tra3nrex_stdop = opmode;
+    public RobotHardware (tra3nrex_omniop opmode) {
+        tra3nrex_omniop = opmode;
     }
 
     /**
@@ -84,28 +88,31 @@ public class RobotHardware {
      */
     public void init()    {
         // Define and Initialize Motors (note: need to use reference to actual OpMode).
-        leftDrive  = tra3nrex_stdop.hardwareMap.get(DcMotor.class, "left_drive");
-        rightDrive = tra3nrex_stdop.hardwareMap.get(DcMotor.class, "right_drive");
-        armMotor   = tra3nrex_stdop.hardwareMap.get(DcMotor.class, "arm");
+        leftFrontDrive = tra3nrex_omniop.hardwareMap.get(DcMotor.class, "left_front_drive");
+        rightFrontDrive = tra3nrex_omniop.hardwareMap.get(DcMotor.class, "right_front_drive");
+        leftBackDrive = tra3nrex_omniop.hardwareMap.get(DcMotor.class, "right_back_drive");
+        rightBackDrive = tra3nrex_omniop.hardwareMap.get(DcMotor.class, "right_back_drive");
 
         // To drive forward, most robots need the motor on one side to be reversed, because the axles point in opposite directions.
         // Pushing the left stick forward MUST make robot go forward. So adjust these two lines based on your first test drive.
         // Note: The settings here assume direct drive on left and right wheels.  Gear Reduction or 90 Deg drives may require direction flips
-        leftDrive.setDirection(DcMotor.Direction.REVERSE);
-        rightDrive.setDirection(DcMotor.Direction.FORWARD);
+        leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
+        rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
+        leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
+        rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
 
         // If there are encoders connected, switch to RUN_USING_ENCODER mode for greater accuracy
         // leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         // rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         // Define and initialize ALL installed servos.
-        leftHand = tra3nrex_stdop.hardwareMap.get(Servo.class, "left_hand");
-        rightHand = tra3nrex_stdop.hardwareMap.get(Servo.class, "right_hand");
+        leftHand = tra3nrex_omniop.hardwareMap.get(Servo.class, "left_hand");
+        rightHand = tra3nrex_omniop.hardwareMap.get(Servo.class, "right_hand");
         leftHand.setPosition(MID_SERVO);
         rightHand.setPosition(MID_SERVO);
 
-        tra3nrex_stdop.telemetry.addData(">", "Hardware Initialized");
-        tra3nrex_stdop.telemetry.update();
+        tra3nrex_omniop.telemetry.addData(">", "Hardware Initialized");
+        tra3nrex_omniop.telemetry.update();
     }
 
     /**
@@ -141,8 +148,8 @@ public class RobotHardware {
      */
     public void setDrivePower(double leftWheel, double rightWheel) {
         // Output the values to the motor drives.
-        leftDrive.setPower(leftWheel);
-        rightDrive.setPower(rightWheel);
+        leftFrontDrive.setPower(leftWheel);
+        rightFrontDrive.setPower(rightWheel);
     }
 
     /**
@@ -151,7 +158,7 @@ public class RobotHardware {
      * @param power driving power (-1.0 to 1.0)
      */
     public void setArmPower(double power) {
-        armMotor.setPower(power);
+        leftBackDrive.setPower(power);
     }
 
     /**
