@@ -125,31 +125,38 @@ public class RobotHardware {
      */
     public void driveRobot(double Drive, double Turn) {
         // Combine drive and turn for blended motion.
-        double left  = Drive + Turn;
-        double right = Drive - Turn;
+        double leftFront  = Drive + Turn;
+        double rightFront = Drive - Turn;
+        double leftBack = Drive + Turn;
+        double rightBack = Drive - Turn;
 
         // Scale the values so neither exceed +/- 1.0
-        double max = Math.max(Math.abs(left), Math.abs(right));
-        if (max > 1.0)
+        double max = Math.max(Math.abs(leftFront), Math.abs(rightFront));
+        double max2 = Math.max(Math.abs(leftBack), Math.abs(rightBack));
+        if (max > 1.0 || max2 > 1.0)
         {
-            left /= max;
-            right /= max;
+            leftFront /= max;
+            rightFront /= max;
+            leftBack /= max;
+            rightBack /= max;
         }
 
         // Use existing function to drive both wheels.
-        setDrivePower(left, right);
+        setDrivePower(leftFront, rightFront, leftBack, rightBack);
     }
 
     /**
      * Pass the requested wheel motor powers to the appropriate hardware drive motors.
      *
-     * @param leftWheel     Fwd/Rev driving power (-1.0 to 1.0) +ve is forward
-     * @param rightWheel    Fwd/Rev driving power (-1.0 to 1.0) +ve is forward
+     * @param leftFrontWheel     Fwd/Rev driving power (-1.0 to 1.0) +ve is forward
+     * @param rightFrontWheel    Fwd/Rev driving power (-1.0 to 1.0) +ve is forward
      */
-    public void setDrivePower(double leftWheel, double rightWheel) {
+    public void setDrivePower(double leftFrontWheel, double rightFrontWheel, double leftBackWheel, double rightBackWheel) {
         // Output the values to the motor drives.
-        leftFrontDrive.setPower(leftWheel);
-        rightFrontDrive.setPower(rightWheel);
+        leftFrontDrive.setPower(leftFrontWheel);
+        rightFrontDrive.setPower(rightFrontWheel);
+        leftBackDrive.setPower(leftBackWheel);
+        rightBackDrive.setPower(rightBackWheel);
     }
 
     /**
@@ -157,9 +164,9 @@ public class RobotHardware {
      *
      * @param power driving power (-1.0 to 1.0)
      */
-    public void setArmPower(double power) {
+    /*public void setArmPower(double power) {
         leftBackDrive.setPower(power);
-    }
+    }*/
 
     /**
      * Send the two hand-servos to opposing (mirrored) positions, based on the passed offset.
