@@ -99,7 +99,7 @@ public class tra3nrex_omniop extends LinearOpMode {
         // when you first test your robot, push the left joystick forward and observe the direction the wheels turn.
         // Reverse the direction (flip FORWARD <-> REVERSE ) of any wheel that runs backward
         // Keep testing until ALL the wheels move the robot forward when you push the left joystick forward.
-        leftFrontDrive.setDirection(DcMotor.Direction.FORWARD);
+        leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
         leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
         rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
         rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
@@ -151,15 +151,15 @@ public class tra3nrex_omniop extends LinearOpMode {
             // Once the correct motors move in the correct direction re-comment this code.
 
         if(Math.abs(gamepad1.left_stick_x+gamepad1.left_stick_y) > .15){
-            leftFrontPower  = gamepad1.left_stick_x - gamepad1.left_stick_y; // ? 1.0 : 0.0;  // X gamepad
-            leftBackPower   = (gamepad1.left_stick_x + gamepad1.left_stick_y)*-1; // ? 1.0 : 0.0;  // A gamepad
-            rightFrontPower = (gamepad1.left_stick_x + gamepad1.left_stick_y)*-1; // ? 1.0 : 0.0;  // Y gamepad
-            rightBackPower  = gamepad1.left_stick_x - gamepad1.left_stick_y; // ? 1.0 : 0.0;  // B gamepad
+            leftFrontPower  = (gamepad1.left_stick_x - gamepad1.left_stick_y)*.5; // ? 1.0 : 0.0;  // X gamepad
+            leftBackPower   = (gamepad1.left_stick_x + gamepad1.left_stick_y)*-1*.5; // ? 1.0 : 0.0;  // A gamepad
+            rightFrontPower = (gamepad1.left_stick_x + gamepad1.left_stick_y)*-1*.5; // ? 1.0 : 0.0;  // Y gamepad
+            rightBackPower  = (gamepad1.left_stick_x - gamepad1.left_stick_y)*.5; // ? 1.0 : 0.0;  // B gamepad
             } else if(Math.abs(gamepad1.right_stick_x) > .1){
-            leftFrontPower = gamepad1.right_stick_x;
-            leftBackPower = gamepad1.right_stick_x;
-            rightFrontPower = gamepad1.right_stick_x*-1;
-            rightBackPower = gamepad1.right_stick_x*-1;
+            leftFrontPower = gamepad1.right_stick_x/2;
+            leftBackPower = gamepad1.right_stick_x/2;
+            rightFrontPower = gamepad1.right_stick_x*-1/2;
+            rightBackPower = gamepad1.right_stick_x*-1/2;
         } else {
             leftFrontPower = 0;
             rightFrontPower = 0;
