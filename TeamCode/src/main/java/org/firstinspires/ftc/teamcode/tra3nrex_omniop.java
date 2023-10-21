@@ -32,6 +32,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 /*
@@ -72,6 +73,8 @@ public class tra3nrex_omniop extends LinearOpMode {
     private DcMotor leftBackDrive = null;
     private DcMotor rightFrontDrive = null;
     private DcMotor rightBackDrive = null;
+    private Servo leftHand = null;
+    private Servo rightHand = null;
 
     @Override
     public void runOpMode() {
@@ -82,6 +85,9 @@ public class tra3nrex_omniop extends LinearOpMode {
         leftBackDrive  = hardwareMap.get(DcMotor.class, "left_back_drive");
         rightFrontDrive = hardwareMap.get(DcMotor.class, "right_front_drive");
         rightBackDrive = hardwareMap.get(DcMotor.class, "right_back_drive");
+        leftHand = hardwareMap.get(Servo.class, "left_hand");
+        rightHand = hardwareMap.get(Servo.class, "right_hand");
+
 
         // ########################################################################################
         // !!!            IMPORTANT Drive Information. Test your motor directions.            !!!!!
@@ -93,7 +99,7 @@ public class tra3nrex_omniop extends LinearOpMode {
         // when you first test your robot, push the left joystick forward and observe the direction the wheels turn.
         // Reverse the direction (flip FORWARD <-> REVERSE ) of any wheel that runs backward
         // Keep testing until ALL the wheels move the robot forward when you push the left joystick forward.
-        leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
+        leftFrontDrive.setDirection(DcMotor.Direction.FORWARD);
         leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
         rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
         rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
@@ -144,12 +150,22 @@ public class tra3nrex_omniop extends LinearOpMode {
             //      the setDirection() calls above.
             // Once the correct motors move in the correct direction re-comment this code.
 
-
-            leftFrontPower  = gamepad1.x ? 1.0 : 0.0;  // X gamepad
-            leftBackPower   = gamepad1.a ? 1.0 : 0.0;  // A gamepad
-            rightFrontPower = gamepad1.y ? 1.0 : 0.0;  // Y gamepad
-            rightBackPower  = gamepad1.b ? 1.0 : 0.0;  // B gamepad
-
+        if(Math.abs(gamepad1.left_stick_x+gamepad1.left_stick_y) > .15){
+            leftFrontPower  = gamepad1.left_stick_x - gamepad1.left_stick_y; // ? 1.0 : 0.0;  // X gamepad
+            leftBackPower   = (gamepad1.left_stick_x + gamepad1.left_stick_y)*-1; // ? 1.0 : 0.0;  // A gamepad
+            rightFrontPower = (gamepad1.left_stick_x + gamepad1.left_stick_y)*-1; // ? 1.0 : 0.0;  // Y gamepad
+            rightBackPower  = gamepad1.left_stick_x - gamepad1.left_stick_y; // ? 1.0 : 0.0;  // B gamepad
+            } else if(Math.abs(gamepad1.right_stick_x) > .1){
+            leftFrontPower = gamepad1.right_stick_x;
+            leftBackPower = gamepad1.right_stick_x;
+            rightFrontPower = gamepad1.right_stick_x*-1;
+            rightBackPower = gamepad1.right_stick_x*-1;
+        } else {
+            leftFrontPower = 0;
+            rightFrontPower = 0;
+            leftBackPower = 0;
+            rightBackPower = 0;
+        }
 
             // Send calculated power to wheels
             leftFrontDrive.setPower(leftFrontPower);
@@ -164,3 +180,4 @@ public class tra3nrex_omniop extends LinearOpMode {
             telemetry.update();
         }
     }}
+
