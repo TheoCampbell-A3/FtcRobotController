@@ -30,7 +30,6 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -55,9 +54,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Robot: Auto Drive By Time", group="Robot")
-@Disabled
-public class RobotAutoDriveByTime_Linear extends LinearOpMode {
+@Autonomous(name="Reliable Excavation Demolition", group="Robot")
+public class RobotAutoDriveByTime_Linear_RED extends LinearOpMode {
 
     // Declare OpMode members for each of the 4 motors.
     private ElapsedTime runtime = new ElapsedTime();
@@ -110,18 +108,18 @@ public class RobotAutoDriveByTime_Linear extends LinearOpMode {
         rightFrontDrive.setPower(FORWARD_SPEED);
 
         runtime.reset();
-        while (opModeIsActive() && (runtime.seconds() < 3.0)) {
+        while (opModeIsActive() && (runtime.seconds() < 0.2)) {
             telemetry.addData("Path", "Leg 1: %4.1f S Elapsed", runtime.seconds());
             telemetry.update();
         }
 
         // Step 2:  Spin right for 1.3 seconds
-        leftFrontDrive.setPower(TURN_SPEED);
-        leftBackDrive.setPower(TURN_SPEED);
-        rightFrontDrive.setPower(-TURN_SPEED);
-        rightBackDrive.setPower(-TURN_SPEED);
+        leftFrontDrive.setPower(-TURN_SPEED);
+        leftBackDrive.setPower(-TURN_SPEED);
+        rightFrontDrive.setPower(TURN_SPEED);
+        rightBackDrive.setPower(TURN_SPEED);
         runtime.reset();
-        while (opModeIsActive() && (runtime.seconds() < 5.3)) {
+        while (opModeIsActive() && (runtime.seconds() < .5)) {
             telemetry.addData("Path", "Leg 2: %4.1f S Elapsed", runtime.seconds());
             telemetry.update();
         }

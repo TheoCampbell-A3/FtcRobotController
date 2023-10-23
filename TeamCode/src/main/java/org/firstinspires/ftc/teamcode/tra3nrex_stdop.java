@@ -49,7 +49,7 @@ import com.qualcomm.robotcore.util.Range;
  */
 
 @TeleOp(name="Robot: Teleop POV", group="Robot")
-//@Disabled
+@Disabled
 public class tra3nrex_stdop extends LinearOpMode {
 
     /* Declare OpMode members. */
