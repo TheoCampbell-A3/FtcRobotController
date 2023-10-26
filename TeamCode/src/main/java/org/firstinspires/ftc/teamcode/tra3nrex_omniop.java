@@ -167,11 +167,29 @@ public class tra3nrex_omniop extends LinearOpMode {
             rightBackPower = 0;
         }
 
+            double leftHandPower = 0;
+            double rightHandPower = 0;
+            if(gamepad1.dpad_up) {
+                leftHandPower = 1.0;
+            }else if(gamepad1.dpad_down){
+                leftHandPower = -1.0;
+            } else
+                {leftHandPower=0;}
+            if(gamepad1.dpad_right){
+                rightHandPower = 1.0;
+            }else if(gamepad1.dpad_left){
+                rightHandPower = -1.0;
+            }else {rightHandPower=0;}
+
+
+
             // Send calculated power to wheels
             leftFrontDrive.setPower(leftFrontPower);
             rightFrontDrive.setPower(rightFrontPower);
             leftBackDrive.setPower(leftBackPower);
             rightBackDrive.setPower(rightBackPower);
+            leftHand.setPosition(leftHandPower);
+            rightHand.setPosition(rightHandPower);
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
