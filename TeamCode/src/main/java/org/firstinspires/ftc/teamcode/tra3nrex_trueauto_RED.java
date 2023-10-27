@@ -173,7 +173,7 @@ public class tra3nrex_trueauto_RED extends LinearOpMode
 //            }
 
             // If Left Bumper is being pressed, AND we have found the desired target, Drive to target Automatically .
-//            if (gamepad1.left_bumper && targetFound) {
+            if (targetFound) {
 
                 // Determine heading, range and Yaw (tag image rotation) error so we can use them to control the robot automatically.
                 double  rangeError      = (desiredTag.ftcPose.range - DESIRED_DISTANCE);
@@ -186,14 +186,11 @@ public class tra3nrex_trueauto_RED extends LinearOpMode
                 strafe = Range.clip(-yawError * STRAFE_GAIN, -MAX_AUTO_STRAFE, MAX_AUTO_STRAFE);
 
                 telemetry.addData("Auto","Drive %5.2f, Strafe %5.2f, Turn %5.2f ", drive, strafe, turn);
-//            } //else {
-//
-//                // drive using manual POV Joystick mode.  Slow things down to make the robot more controlable.
-//                drive  = -gamepad1.left_stick_y  / 2.0;  // Reduce drive rate to 50%.
-//                strafe = -gamepad1.left_stick_x  / 2.0;  // Reduce strafe rate to 50%.
-//                turn   = -gamepad1.right_stick_x / 3.0;  // Reduce turn rate to 33%.
-//                telemetry.addData("Manual","Drive %5.2f, Strafe %5.2f, Turn %5.2f ", drive, strafe, turn);
-//            }
+            } else {
+                drive = 0;
+                turn = 0;
+                strafe = 0;
+            }
             telemetry.update();
 
             // Apply desired axes motions to the drivetrain.
