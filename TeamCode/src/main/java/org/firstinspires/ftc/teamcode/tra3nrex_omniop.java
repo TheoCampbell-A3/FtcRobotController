@@ -34,6 +34,11 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
+import com.qualcomm.robotcore.hardware.TouchSensor;
+
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 /*
  * This file contains an example of a Linear "OpMode".
@@ -75,6 +80,8 @@ public class tra3nrex_omniop extends LinearOpMode {
     private DcMotor rightBackDrive = null;
     private Servo leftHand = null;
     private Servo rightHand = null;
+    private DistanceSensor sensorDistance;
+    private TouchSensor sensorTouch;
 
     @Override
     public void runOpMode() {
@@ -87,6 +94,8 @@ public class tra3nrex_omniop extends LinearOpMode {
         rightBackDrive = hardwareMap.get(DcMotor.class, "right_back_drive");
         leftHand = hardwareMap.get(Servo.class, "left_hand");
         rightHand = hardwareMap.get(Servo.class, "right_hand");
+        sensorDistance = hardwareMap.get(DistanceSensor.class, "sensor_distance");
+        sensorTouch = hardwareMap.get(TouchSensor.class,"sensor_touch2");
 
 
         // ########################################################################################
@@ -150,16 +159,26 @@ public class tra3nrex_omniop extends LinearOpMode {
             //      the setDirection() calls above.
             // Once the correct motors move in the correct direction re-comment this code.
 
-        if(Math.abs(gamepad1.left_stick_x+gamepad1.left_stick_y) > .15){
-            leftFrontPower  = (gamepad1.left_stick_x - gamepad1.left_stick_y)*.5; // ? 1.0 : 0.0;  // X gamepad
-            leftBackPower   = (gamepad1.left_stick_x + gamepad1.left_stick_y)*-1*.5; // ? 1.0 : 0.0;  // A gamepad
-            rightFrontPower = (gamepad1.left_stick_x + gamepad1.left_stick_y)*-1*.5; // ? 1.0 : 0.0;  // Y gamepad
-            rightBackPower  = (gamepad1.left_stick_x - gamepad1.left_stick_y)*.5; // ? 1.0 : 0.0;  // B gamepad
-            } else if(Math.abs(gamepad1.right_stick_x) > .1){
-            leftFrontPower = gamepad1.right_stick_x/2;
-            leftBackPower = gamepad1.right_stick_x/2;
-            rightFrontPower = gamepad1.right_stick_x*-1/2;
-            rightBackPower = gamepad1.right_stick_x*-1/2;
+        if(Math.abs(gamepad1.left_stick_x+gamepad1.left_stick_y) > .15 && gamepad1.left_stick_button){
+            leftFrontPower  = (gamepad1.left_stick_x - gamepad1.left_stick_y + gamepad1.right_stick_x); // ? 1.0 : 0.0;  // X gamepad
+            leftBackPower   = (gamepad1.left_stick_x + gamepad1.left_stick_y + gamepad1.right_stick_x)*-1; // ? 1.0 : 0.0;  // A gamepad
+            rightFrontPower = (gamepad1.left_stick_x + gamepad1.left_stick_y - gamepad1.right_stick_x)*-1; // ? 1.0 : 0.0;  // Y gamepad
+            rightBackPower  = (gamepad1.left_stick_x - gamepad1.left_stick_y - gamepad1.right_stick_x); // ? 1.0 : 0.0;  // B gamepad
+        } else if(Math.abs(gamepad1.right_stick_x) > .1 && gamepad1.right_stick_button) {
+            leftFrontPower = gamepad1.right_stick_x;
+            leftBackPower = gamepad1.right_stick_x;
+            rightFrontPower = gamepad1.right_stick_x * -1;
+            rightBackPower = gamepad1.right_stick_x * -1;
+        } else if(Math.abs(gamepad1.left_stick_x+gamepad1.left_stick_y) > .15){
+            leftFrontPower  = (gamepad1.left_stick_x - gamepad1.left_stick_y + gamepad1.right_stick_x)*.5; // ? 1.0 : 0.0;  // X gamepad
+            leftBackPower   = (gamepad1.left_stick_x + gamepad1.left_stick_y + gamepad1.right_stick_x)*-1*.5; // ? 1.0 : 0.0;  // A gamepad
+            rightFrontPower = (gamepad1.left_stick_x + gamepad1.left_stick_y - gamepad1.right_stick_x)*-1*.5; // ? 1.0 : 0.0;  // Y gamepad
+            rightBackPower  = (gamepad1.left_stick_x - gamepad1.left_stick_y - gamepad1.right_stick_x)*.5; // ? 1.0 : 0.0;  // B gamepad
+        } else if(Math.abs(gamepad1.right_stick_x) > .1) {
+            leftFrontPower = gamepad1.right_stick_x / 2;
+            leftBackPower = gamepad1.right_stick_x / 2;
+            rightFrontPower = gamepad1.right_stick_x * -1 / 2;
+            rightBackPower = gamepad1.right_stick_x * -1 / 2;
         } else {
             leftFrontPower = 0;
             rightFrontPower = 0;
@@ -169,16 +188,12 @@ public class tra3nrex_omniop extends LinearOpMode {
 
             double leftHandPower = 0;
             double rightHandPower = 0;
-            if(gamepad1.dpad_up) {
+            if(gamepad1.right_bumper) {
                 leftHandPower = 1.0;
-            }else if(gamepad1.dpad_down){
-                leftHandPower = -1.0;
-            } else
+            }else
                 {leftHandPower=0;}
-            if(gamepad1.dpad_right){
+            if(gamepad1.left_bumper){
                 rightHandPower = 1.0;
-            }else if(gamepad1.dpad_left){
-                rightHandPower = -1.0;
             }else {rightHandPower=0;}
 
 
@@ -195,6 +210,12 @@ public class tra3nrex_omniop extends LinearOpMode {
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.addData("Front left/Right", "%4.2f, %4.2f", leftFrontPower, rightFrontPower);
             telemetry.addData("Back  left/Right", "%4.2f, %4.2f", leftBackPower, rightBackPower);
+            telemetry.addData("range", String.format("%.01f cm", sensorDistance.getDistance(DistanceUnit.CM)));
+            if (sensorTouch.isPressed()) {
+                telemetry.addData("Touch Sensor", "Is Pressed");
+            } else {
+                telemetry.addData("Touch Sensor", "Is Not Pressed");
+            }
             telemetry.update();
         }
     }}
