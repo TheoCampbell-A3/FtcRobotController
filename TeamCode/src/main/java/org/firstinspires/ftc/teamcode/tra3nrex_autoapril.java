@@ -158,7 +158,7 @@ public class tra3nrex_autoapril extends LinearOpMode
         {
             targetFound = false;
             desiredTag  = null;
-
+            
             // Step through the list of detected tags and look for a matching tag
             List<AprilTagDetection> currentDetections = aprilTag.getDetections();
             for (AprilTagDetection detection : currentDetections) {

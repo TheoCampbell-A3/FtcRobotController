@@ -37,6 +37,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.TouchSensor;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
@@ -69,7 +70,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
  */
 
 @TeleOp(name="Basic: Omni Linear OpMode", group="Linear OpMode")
-//@Disabled
+@Disabled
 public class tra3nrex_omniop extends LinearOpMode {
 
     // Declare OpMode members for each of the 4 motors.

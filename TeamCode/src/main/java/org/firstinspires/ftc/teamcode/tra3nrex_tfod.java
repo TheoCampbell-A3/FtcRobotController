@@ -49,7 +49,6 @@ import java.util.List;
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list.
  */
 @TeleOp(name = "Concept: TensorFlow Object Detection", group = "Concept")
-@Disabled
 public class tra3nrex_tfod extends LinearOpMode {
 
     private static final boolean USE_WEBCAM = true;  // true for webcam, false for phone camera
@@ -135,7 +134,7 @@ public class tra3nrex_tfod extends LinearOpMode {
         //builder.setCameraResolution(new Size(640, 480));
 
         // Enable the RC preview (LiveView).  Set "false" to omit camera monitoring.
-        //builder.enableCameraMonitoring(true);
+        builder.enableLiveView(true);
 
         // Set the stream format; MJPEG uses less bandwidth than default YUY2.
         //builder.setStreamFormat(VisionPortal.StreamFormat.YUY2);
