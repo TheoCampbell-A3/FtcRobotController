@@ -29,9 +29,13 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import android.util.Size;
+
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -48,11 +52,14 @@ import java.util.List;
  * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list.
  */
-@TeleOp(name = "Concept: TensorFlow Object Detection", group = "Concept")
+@Autonomous(name = "Concept: TensorFlow Object Detection", group = "Concept")
 public class tra3nrex_tfod extends LinearOpMode {
 
     private static final boolean USE_WEBCAM = true;  // true for webcam, false for phone camera
-
+    private DcMotor leftFrontDrive = null;
+    private DcMotor leftBackDrive = null;
+    private DcMotor rightFrontDrive = null;
+    private DcMotor rightBackDrive = null;
     /**
      * The variable to store our instance of the TensorFlow Object Detection processor.
      */
@@ -62,9 +69,25 @@ public class tra3nrex_tfod extends LinearOpMode {
      * The variable to store our instance of the vision portal.
      */
     private VisionPortal visionPortal;
+    private static final String TFOD_MODEL_ASSET = "the_cake_is_a_lie.tflite";
+    private static final String[] LABELS = {
+            "Pixel", "red prop", "blu prop"
+    };
 
     @Override
     public void runOpMode() {
+        leftFrontDrive  = hardwareMap.get(DcMotor.class, "left_front_drive");
+        leftBackDrive  = hardwareMap.get(DcMotor.class, "left_back_drive");
+        rightFrontDrive = hardwareMap.get(DcMotor.class, "right_front_drive");
+        rightBackDrive = hardwareMap.get(DcMotor.class, "right_back_drive");
+        double leftFrontPower; //  = axial + lateral + yaw;
+        double rightFrontPower; // = axial - lateral - yaw;
+        double leftBackPower;  // = axial - lateral + yaw;
+        double rightBackPower;
+        leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
+        leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
+        rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
+        rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
 
         initTfod();
 
@@ -109,14 +132,14 @@ public class tra3nrex_tfod extends LinearOpMode {
 
             // Use setModelAssetName() if the TF Model is built in as an asset.
             // Use setModelFileName() if you have downloaded a custom team model to the Robot Controller.
-            //.setModelAssetName(TFOD_MODEL_ASSET)
+            .setModelAssetName(TFOD_MODEL_ASSET)
             //.setModelFileName(TFOD_MODEL_FILE)
 
-            //.setModelLabels(LABELS)
+            .setModelLabels(LABELS)
             //.setIsModelTensorFlow2(true)
             //.setIsModelQuantized(true)
             //.setModelInputSize(300)
-            //.setModelAspectRatio(16.0 / 9.0)
+            .setModelAspectRatio(16.0 / 9.0)
 
             .build();
 
@@ -131,10 +154,10 @@ public class tra3nrex_tfod extends LinearOpMode {
         }
 
         // Choose a camera resolution. Not all cameras support all resolutions.
-        //builder.setCameraResolution(new Size(640, 480));
+        builder.setCameraResolution(new Size(1280, 720));
 
         // Enable the RC preview (LiveView).  Set "false" to omit camera monitoring.
-        builder.enableLiveView(true);
+        //builder.enableCameraMonitoring(true);
 
         // Set the stream format; MJPEG uses less bandwidth than default YUY2.
         //builder.setStreamFormat(VisionPortal.StreamFormat.YUY2);
@@ -151,7 +174,7 @@ public class tra3nrex_tfod extends LinearOpMode {
         visionPortal = builder.build();
 
         // Set confidence threshold for TFOD recognitions, at any time.
-        //tfod.setMinResultConfidence(0.75f);
+        tfod.setMinResultConfidence(0.8f);
 
         // Disable or re-enable the TFOD processor at any time.
         //visionPortal.setProcessorEnabled(tfod, true);
@@ -167,15 +190,71 @@ public class tra3nrex_tfod extends LinearOpMode {
         telemetry.addData("# Objects Detected", currentRecognitions.size());
 
         // Step through the list of recognitions and display info for each one.
+        boolean forNotDone = true;
+        if(forNotDone){
         for (Recognition recognition : currentRecognitions) {
-            double x = (recognition.getLeft() + recognition.getRight()) / 2 ;
-            double y = (recognition.getTop()  + recognition.getBottom()) / 2 ;
+            double x = (recognition.getLeft() + recognition.getRight()) / 2;
+            double y = (recognition.getTop() + recognition.getBottom()) / 2;
 
-            telemetry.addData(""," ");
+            telemetry.addData("", " ");
             telemetry.addData("Image", "%s (%.0f %% Conf.)", recognition.getLabel(), recognition.getConfidence() * 100);
             telemetry.addData("- Position", "%.0f / %.0f", x, y);
             telemetry.addData("- Size", "%.0f x %.0f", recognition.getWidth(), recognition.getHeight());
+            if (recognition.getLabel() == "red prop" && x > 100 && x < 300) {
+                leftFrontDrive.setPower(1);
+                leftBackDrive.setPower(-1);
+                rightBackDrive.setPower(-1);
+                rightFrontDrive.setPower(1);
+                sleep(200);
+                leftFrontDrive.setPower(1);
+                leftBackDrive.setPower(1);
+                rightBackDrive.setPower(1);
+                rightFrontDrive.setPower(1);
+                sleep(100);
+                leftFrontDrive.setPower(0);
+                leftBackDrive.setPower(0);
+                rightBackDrive.setPower(0);
+                rightFrontDrive.setPower(0);
+                forNotDone = false;
+            } else if (recognition.getLabel() == "red prop" && x > 400 && x < 700) {
+
+                leftFrontDrive.setPower(1);
+                leftBackDrive.setPower(1);
+                rightBackDrive.setPower(1);
+                rightFrontDrive.setPower(1);
+                sleep(200);
+                leftFrontDrive.setPower(0);
+                leftBackDrive.setPower(0);
+                rightBackDrive.setPower(0);
+                rightFrontDrive.setPower(0);
+                forNotDone = false;
+            } else if (recognition.getLabel() == "red prop" && x > 800 && x < 1200) {
+                leftFrontDrive.setPower(-1);
+                leftBackDrive.setPower(1);
+                rightBackDrive.setPower(1);
+                rightFrontDrive.setPower(-1);
+                sleep(200);
+                leftFrontDrive.setPower(1);
+                leftBackDrive.setPower(1);
+                rightBackDrive.setPower(1);
+                rightFrontDrive.setPower(1);
+                sleep(100);
+                leftFrontDrive.setPower(0);
+                leftBackDrive.setPower(0);
+                rightBackDrive.setPower(0);
+                rightFrontDrive.setPower(0);
+                forNotDone = false;
+            } else {
+                leftFrontDrive.setPower(0);
+                leftBackDrive.setPower(0);
+                rightBackDrive.setPower(0);
+                rightFrontDrive.setPower(0);
+            }
+        }
+
         }   // end for() loop
+
+
 
     }   // end method telemetryTfod()
 

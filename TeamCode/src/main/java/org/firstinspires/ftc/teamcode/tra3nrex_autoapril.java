@@ -83,7 +83,7 @@ import java.util.concurrent.TimeUnit;
  *
  */
 
-@TeleOp(name="Omni Drive To AprilTag", group = "Concept")
+@TeleOp(name="Main Driving Code (3.0)", group = "Concept")
 
 public class tra3nrex_autoapril extends LinearOpMode
 {
@@ -211,16 +211,16 @@ public class tra3nrex_autoapril extends LinearOpMode
             } else if(gamepad1.left_stick_button || gamepad1.right_stick_button) {
 
                 // drive using manual POV Joystick mode.  Slow things down to make the robot more controlable.
-                drive  = -gamepad1.left_stick_y  / 1.0;  // Reduce drive rate to 50%.
+                drive  = -gamepad1.left_stick_y  / 1.0 ;  // Reduce drive rate to 50%.
                 strafe = -gamepad1.left_stick_x  / 1.0;  // Reduce strafe rate to 50%.
-                turn   = -gamepad1.right_stick_x / 1.5;  // Reduce turn rate to 33%.
+                turn   = gamepad1.right_stick_x / 1.5;  // Reduce turn rate to 33%.
                 telemetry.addData("Manual","Drive %5.2f, Strafe %5.2f, Turn %5.2f ", drive, strafe, turn);
             } else {
 
             // drive using manual POV Joystick mode.  Slow things down to make the robot more controlable.
-            drive  = -gamepad1.left_stick_y  / 2.0;  // Reduce drive rate to 50%.
+            drive  = -gamepad1.left_stick_y  / 2.0  ;  // Reduce drive rate to 50%.
             strafe = -gamepad1.left_stick_x  / 2.0;  // Reduce strafe rate to 50%.
-            turn   = -gamepad1.right_stick_x / 3.0;  // Reduce turn rate to 33%.
+            turn   = gamepad1.right_stick_x / 3.0;  // Reduce turn rate to 33%.
             telemetry.addData("Manual","Drive %5.2f, Strafe %5.2f, Turn %5.2f ", drive, strafe, turn);
         }
             telemetry.addData("range", String.format("%.01f cm", sensorDistance.getDistance(DistanceUnit.CM)));
@@ -248,9 +248,9 @@ public class tra3nrex_autoapril extends LinearOpMode
      */
     public void moveRobot(double x, double y, double yaw) {
         // Calculate wheel powers.
-        double leftFrontPower    =  x -y -yaw;
+        double leftFrontPower    =  x +y -yaw;
         double rightFrontPower   =  x +y +yaw;
-        double leftBackPower     =  x +y -yaw;
+        double leftBackPower     =  x -y -yaw;
         double rightBackPower    =  x -y +yaw;
 
         // Normalize wheel powers to be less than 1.0
