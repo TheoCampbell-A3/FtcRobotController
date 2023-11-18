@@ -52,7 +52,7 @@ import java.util.List;
  * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list.
  */
-@Autonomous(name = "Concept: TensorFlow Object Detection", group = "Concept")
+@Autonomous(name = "tra3nrex-thefunnyautomatic", group = "Concept")
 public class tra3nrex_tfod extends LinearOpMode {
 
     private static final boolean USE_WEBCAM = true;  // true for webcam, false for phone camera
@@ -174,12 +174,13 @@ public class tra3nrex_tfod extends LinearOpMode {
         visionPortal = builder.build();
 
         // Set confidence threshold for TFOD recognitions, at any time.
-        tfod.setMinResultConfidence(0.8f);
+        tfod.setMinResultConfidence(0.7f);
 
         // Disable or re-enable the TFOD processor at any time.
         //visionPortal.setProcessorEnabled(tfod, true);
 
     }   // end method initTfod()
+    boolean forNotDone = true;
 
     /**
      * Add telemetry about TensorFlow Object Detection (TFOD) recognitions.
@@ -190,8 +191,7 @@ public class tra3nrex_tfod extends LinearOpMode {
         telemetry.addData("# Objects Detected", currentRecognitions.size());
 
         // Step through the list of recognitions and display info for each one.
-        boolean forNotDone = true;
-        if(forNotDone){
+        if(forNotDone != false){
         for (Recognition recognition : currentRecognitions) {
             double x = (recognition.getLeft() + recognition.getRight()) / 2;
             double y = (recognition.getTop() + recognition.getBottom()) / 2;
@@ -200,50 +200,43 @@ public class tra3nrex_tfod extends LinearOpMode {
             telemetry.addData("Image", "%s (%.0f %% Conf.)", recognition.getLabel(), recognition.getConfidence() * 100);
             telemetry.addData("- Position", "%.0f / %.0f", x, y);
             telemetry.addData("- Size", "%.0f x %.0f", recognition.getWidth(), recognition.getHeight());
-            if (recognition.getLabel() == "red prop" && x > 100 && x < 300) {
-                leftFrontDrive.setPower(1);
-                leftBackDrive.setPower(-1);
-                rightBackDrive.setPower(-1);
-                rightFrontDrive.setPower(1);
-                sleep(200);
+            if (/*recognition.getLabel() == "red prop" || recognition.getLabel() == "blu prop"  && */x > 100 && x < 300 && forNotDone == true) {
                 leftFrontDrive.setPower(1);
                 leftBackDrive.setPower(1);
-                rightBackDrive.setPower(1);
-                rightFrontDrive.setPower(1);
-                sleep(100);
+                rightBackDrive.setPower(.5);
+                rightFrontDrive.setPower(.5);
+                sleep(410);
                 leftFrontDrive.setPower(0);
                 leftBackDrive.setPower(0);
                 rightBackDrive.setPower(0);
                 rightFrontDrive.setPower(0);
                 forNotDone = false;
-            } else if (recognition.getLabel() == "red prop" && x > 400 && x < 700) {
+                break;
+            } else if (/*recognition.getLabel() == "red prop" || recognition.getLabel() == "blu prop"  && */x > 400 && x < 700 && forNotDone == true) {
 
                 leftFrontDrive.setPower(1);
                 leftBackDrive.setPower(1);
                 rightBackDrive.setPower(1);
                 rightFrontDrive.setPower(1);
-                sleep(200);
+                sleep(425);
                 leftFrontDrive.setPower(0);
                 leftBackDrive.setPower(0);
                 rightBackDrive.setPower(0);
                 rightFrontDrive.setPower(0);
                 forNotDone = false;
-            } else if (recognition.getLabel() == "red prop" && x > 800 && x < 1200) {
-                leftFrontDrive.setPower(-1);
-                leftBackDrive.setPower(1);
-                rightBackDrive.setPower(1);
-                rightFrontDrive.setPower(-1);
-                sleep(200);
-                leftFrontDrive.setPower(1);
-                leftBackDrive.setPower(1);
+                break;
+            } else if (/*recognition.getLabel() == "red prop" || recognition.getLabel() == "blu prop"  && */x > 800 && x < 1200 && forNotDone == true) {
+                leftFrontDrive.setPower(.5);
+                leftBackDrive.setPower(.5);
                 rightBackDrive.setPower(1);
                 rightFrontDrive.setPower(1);
-                sleep(100);
+                sleep(410);
                 leftFrontDrive.setPower(0);
                 leftBackDrive.setPower(0);
                 rightBackDrive.setPower(0);
                 rightFrontDrive.setPower(0);
                 forNotDone = false;
+                break;
             } else {
                 leftFrontDrive.setPower(0);
                 leftBackDrive.setPower(0);
