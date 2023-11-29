@@ -218,7 +218,7 @@ public class tra3nrex_tfod extends LinearOpMode {
                 leftBackDrive.setPower(1);
                 rightBackDrive.setPower(1);
                 rightFrontDrive.setPower(1);
-                sleep(425);
+                sleep(405);
                 leftFrontDrive.setPower(0);
                 leftBackDrive.setPower(0);
                 rightBackDrive.setPower(0);
