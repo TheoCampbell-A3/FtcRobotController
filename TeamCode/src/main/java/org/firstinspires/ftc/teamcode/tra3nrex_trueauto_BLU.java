@@ -76,6 +76,18 @@ import java.util.concurrent.TimeUnit;
  * Use Android Studio to Copy this Class, and Paste it into the TeamCode/src/main/java/org/firstinspires/ftc/teamcode folder.
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list.
  *
+ *
+ * planning for autonomous
+ * first, take in a single preloaded pixel (start "toilet" at 0.75)
+ * start with the flytrap open, then close it once the pixel is inside. No need to detect, it being timed should be fine.
+ * (start servo "left_arm" at 1.0, then set it to 0.4 after a second or two)
+ * then, run the brush in reverse to push a second pixel to the spike mark using TFOD. (run "toilet" at -0.75 and start TFOD)
+ * after TFOD finishes, back up and head to the proper backdrop using AprilTag detection
+ * (stop TFOD, stop "toilet", move through the trusses, and then start apriltag detection)
+ * lift the arm and open the flytrap to drop the pixel (set "WeWorkedSoHardOnThis" to 0.5 until it hits the backdrop, then set "left_arm" to 1.0)
+ * and HOPEFULLY the pixel won't stick or fall in the wrong spot.
+ * once the autonomous stops, the robot should already be "parked", which will net an extra 5 points.
+ *
  */
 
 @Autonomous(name="april-blu", group = "Concept")
