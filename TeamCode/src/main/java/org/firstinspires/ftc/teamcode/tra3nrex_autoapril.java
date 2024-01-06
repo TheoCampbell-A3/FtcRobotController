@@ -158,14 +158,14 @@ public class tra3nrex_autoapril extends LinearOpMode
             double leftHandPower = 0;
             double rightHandPower = 0;
             if (gamepad1.right_bumper) {
-                leftHandPower = 1.0;
+                leftHandPower = 0.4;
             } else {
-                leftHandPower = 0;
+                leftHandPower = 1.0;
             }
             if (gamepad1.left_bumper) {
-                rightHandPower = 1.0;
+                rightHandPower = 0.4;
             } else {
-                rightHandPower = 0;
+                rightHandPower = 1.0;
             }
             leftHand.setPosition(leftHandPower);
             rightHand.setPosition(rightHandPower);
