@@ -29,26 +29,14 @@
 
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
-import com.qualcomm.robotcore.util.Range;
 
-import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.ExposureControl;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.GainControl;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.vision.VisionPortal;
-import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
-import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
-
-import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 /*
  * This OpMode illustrates using a camera to locate and drive towards a specific AprilTag.
@@ -85,7 +73,7 @@ import java.util.concurrent.TimeUnit;
 
 @TeleOp(name="Main Driving Code (3.0)", group = "Concept")
 
-public class tra3nrex_autoapril extends LinearOpMode
+public class tra3nrex_maindrv extends LinearOpMode
 {
     // Adjust these numbers to suit your robot.
     final double DESIRED_DISTANCE = 12.0; //  this is how close the camera should get to the target (inches)
@@ -105,10 +93,13 @@ public class tra3nrex_autoapril extends LinearOpMode
     private DcMotor rightFrontDrive  = null;  //  Used to control the right front drive wheel
     private DcMotor leftBackDrive    = null;  //  Used to control the left back drive wheel
     private DcMotor rightBackDrive   = null;  //  Used to control the right back drive wheel
+    private DcMotor pixelIntake      = null;
+    private DcMotor pixelArm         = null;
     private Servo leftHand = null;
     private Servo rightHand = null;
     private DistanceSensor sensorDistance;
     private TouchSensor sensorTouch;
+    boolean toggle = false;
 //    private static final boolean USE_WEBCAM = true;  // Set true to use a webcam, or false for a phone camera
 //    private static final int DESIRED_TAG_ID = -1;     // Choose the tag you want to approach or set to -1 for ANY tag.
 //    private VisionPortal visionPortal;               // Used to manage the video source.
@@ -131,6 +122,8 @@ public class tra3nrex_autoapril extends LinearOpMode
         rightFrontDrive = hardwareMap.get(DcMotor.class, "right_front_drive");
         leftBackDrive = hardwareMap.get(DcMotor.class, "left_back_drive");
         rightBackDrive = hardwareMap.get(DcMotor.class, "right_back_drive");
+        pixelIntake = hardwareMap.get(DcMotor.class, "toilet");
+        pixelArm = hardwareMap.get(DcMotor.class, "WeWorkedSoHardOnThis");
         leftHand = hardwareMap.get(Servo.class, "left_hand");
         rightHand = hardwareMap.get(Servo.class, "right_hand");
         sensorDistance = hardwareMap.get(DistanceSensor.class, "sensor_distance");
@@ -143,6 +136,8 @@ public class tra3nrex_autoapril extends LinearOpMode
         leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
         rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
         rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
+        pixelIntake.setDirection(DcMotor.Direction.REVERSE);
+        pixelArm.setDirection(DcMotor.Direction.FORWARD);
 
         //if (USE_WEBCAM)
         //    setManualExposure(6, 250);  // Use low exposure time to reduce motion blur
@@ -155,17 +150,21 @@ public class tra3nrex_autoapril extends LinearOpMode
 
         while (opModeIsActive()) {
 
-            double leftHandPower = 0;
-            double rightHandPower = 0;
-            if (gamepad1.right_bumper) {
+            double leftHandPower = 1.0;
+            double rightHandPower = 1.0;
+            if (gamepad1.right_bumper && toggle == true) {
                 leftHandPower = 0.4;
-            } else {
+                toggle = false;
+            } else if (gamepad1.right_bumper && toggle == false) {
                 leftHandPower = 1.0;
+                toggle = true;
             }
-            if (gamepad1.left_bumper) {
+            if (gamepad1.left_bumper && toggle == true) {
                 rightHandPower = 0.4;
-            } else {
+                toggle = false;
+            } else if (gamepad1.left_bumper && toggle == false) {
                 rightHandPower = 1.0;
+                toggle = true;
             }
             leftHand.setPosition(leftHandPower);
             rightHand.setPosition(rightHandPower);
@@ -215,6 +214,8 @@ public class tra3nrex_autoapril extends LinearOpMode
         double rightFrontPower   =  x +y +yaw;
         double leftBackPower     =  x -y -yaw;
         double rightBackPower    =  x -y +yaw;
+        double pixelIntakePower  =  gamepad1.right_trigger*.75;
+        double pixelArmPower     =  gamepad1.left_trigger*.5;
 
         // Normalize wheel powers to be less than 1.0
         double max = Math.max(Math.abs(leftFrontPower), Math.abs(rightFrontPower));
@@ -226,6 +227,8 @@ public class tra3nrex_autoapril extends LinearOpMode
             rightFrontPower /= max;
             leftBackPower /= max;
             rightBackPower /= max;
+            pixelIntakePower /= max;
+            pixelArmPower /= max;
         }
 
         // Send powers to the wheels.
@@ -233,6 +236,8 @@ public class tra3nrex_autoapril extends LinearOpMode
         rightFrontDrive.setPower(rightFrontPower);
         leftBackDrive.setPower(leftBackPower);
         rightBackDrive.setPower(rightBackPower);
+        pixelIntake.setPower(pixelIntakePower);
+        pixelArm.setPower(pixelArmPower);
 
     }
 
