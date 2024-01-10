@@ -100,6 +100,8 @@ public class tra3nrex_maindrv extends LinearOpMode
     private DistanceSensor sensorDistance;
     private TouchSensor sensorTouch;
     boolean toggle = false;
+    boolean bState = false;
+    double pixelIntakePower = 0;
 //    private static final boolean USE_WEBCAM = true;  // Set true to use a webcam, or false for a phone camera
 //    private static final int DESIRED_TAG_ID = -1;     // Choose the tag you want to approach or set to -1 for ANY tag.
 //    private VisionPortal visionPortal;               // Used to manage the video source.
@@ -123,7 +125,7 @@ public class tra3nrex_maindrv extends LinearOpMode
         leftBackDrive = hardwareMap.get(DcMotor.class, "left_back_drive");
         rightBackDrive = hardwareMap.get(DcMotor.class, "right_back_drive");
         pixelIntake = hardwareMap.get(DcMotor.class, "toilet");
-        pixelArm = hardwareMap.get(DcMotor.class, "WeWorkedSoHardOnThis");
+        pixelArm = hardwareMap.get(DcMotor.class, "flytrap");
         leftHand = hardwareMap.get(Servo.class, "left_hand");
         rightHand = hardwareMap.get(Servo.class, "right_hand");
         sensorDistance = hardwareMap.get(DistanceSensor.class, "sensor_distance");
@@ -155,9 +157,19 @@ public class tra3nrex_maindrv extends LinearOpMode
             if (gamepad1.right_bumper && toggle == true) {
                 leftHandPower = 0.4;
                 toggle = false;
+                bState = true;
+            } else if (!gamepad1.right_bumper && toggle == true) {
+                leftHandPower = 0.4;
+                toggle = false;
+                bState = false;
             } else if (gamepad1.right_bumper && toggle == false) {
                 leftHandPower = 1.0;
                 toggle = true;
+                bState = true;
+            } else if (gamepad1.right_bumper && toggle == false) {
+                leftHandPower = 1.0;
+                toggle = true;
+                bState = false;
             }
             if (gamepad1.left_bumper && toggle == true) {
                 rightHandPower = 0.4;
@@ -165,6 +177,22 @@ public class tra3nrex_maindrv extends LinearOpMode
             } else if (gamepad1.left_bumper && toggle == false) {
                 rightHandPower = 1.0;
                 toggle = true;
+            } else if (gamepad1.left_bumper && toggle == false) {
+                rightHandPower = 1.0;
+                toggle = true;
+            } else if (gamepad1.left_bumper && toggle == false) {
+                rightHandPower = 1.0;
+                toggle = true;
+            }
+            if (gamepad1.b) {
+                pixelIntakePower = 1;
+            } else {
+                pixelIntakePower = 0;
+            }
+            if (gamepad1.a) {
+                pixelIntakePower = -1;
+            } else {
+                pixelIntakePower = 0;
             }
             leftHand.setPosition(leftHandPower);
             rightHand.setPosition(rightHandPower);
@@ -214,8 +242,7 @@ public class tra3nrex_maindrv extends LinearOpMode
         double rightFrontPower   =  x +y +yaw;
         double leftBackPower     =  x -y -yaw;
         double rightBackPower    =  x -y +yaw;
-        double pixelIntakePower  =  gamepad1.right_trigger*.75;
-        double pixelArmPower     =  gamepad1.left_trigger*.5;
+        double pixelArmPower     =  gamepad1.right_trigger*-.75+gamepad1.left_trigger*.75;
 
         // Normalize wheel powers to be less than 1.0
         double max = Math.max(Math.abs(leftFrontPower), Math.abs(rightFrontPower));
