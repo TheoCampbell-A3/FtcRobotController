@@ -154,19 +154,19 @@ public class tra3nrex_maindrv extends LinearOpMode
 
             double leftHandPower = 1.0;
             double rightHandPower = 1.0;
-            if (gamepad1.right_bumper && toggle == true) {
+            if (gamepad1.right_bumper && toggle) {
                 leftHandPower = 0.4;
                 toggle = false;
                 bState = true;
-            } else if (!gamepad1.right_bumper && toggle == true) {
+            } else if (!gamepad1.right_bumper && toggle) {
                 leftHandPower = 0.4;
                 toggle = false;
                 bState = false;
-            } else if (gamepad1.right_bumper && toggle == false) {
+            } else if (gamepad1.right_bumper && !toggle) {
                 leftHandPower = 1.0;
                 toggle = true;
                 bState = true;
-            } else if (gamepad1.right_bumper && toggle == false) {
+            } else if (!gamepad1.right_bumper && !toggle) {
                 leftHandPower = 1.0;
                 toggle = true;
                 bState = false;
@@ -244,6 +244,7 @@ public class tra3nrex_maindrv extends LinearOpMode
         double rightBackPower    =  x -y +yaw;
         double pixelArmPower     =  gamepad1.right_trigger*-.75+gamepad1.left_trigger*.75;
 
+
         // Normalize wheel powers to be less than 1.0
         double max = Math.max(Math.abs(leftFrontPower), Math.abs(rightFrontPower));
         max = Math.max(max, Math.abs(leftBackPower));
@@ -259,6 +260,11 @@ public class tra3nrex_maindrv extends LinearOpMode
         }
 
         // Send powers to the wheels.
+
+        telemetry.addData("leftFrontPower", leftFrontPower);
+        telemetry.addData("rightFrontPower", rightFrontPower);
+        telemetry.addData("leftBackPower", leftBackPower);
+        telemetry.addData("rightBackPower", rightBackPower);
         leftFrontDrive.setPower(leftFrontPower);
         rightFrontDrive.setPower(rightFrontPower);
         leftBackDrive.setPower(leftBackPower);

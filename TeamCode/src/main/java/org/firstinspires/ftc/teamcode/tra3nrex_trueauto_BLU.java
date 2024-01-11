@@ -29,6 +29,8 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import android.util.Size;
+
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -38,9 +40,11 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDir
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.ExposureControl;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.GainControl;
+import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
+import org.firstinspires.ftc.vision.tfod.TfodProcessor;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -117,6 +121,11 @@ public class tra3nrex_trueauto_BLU extends LinearOpMode
     private VisionPortal visionPortal;               // Used to manage the video source.
     private AprilTagProcessor aprilTag;              // Used for managing the AprilTag detection process.
     private AprilTagDetection desiredTag = null;     // Used to hold the data for a detected AprilTag
+    private TfodProcessor tfod;
+    private static final String TFOD_MODEL_ASSET = "the_cake_is_a_lie.tflite";
+    private static final String[] LABELS = {
+            "Pixel", "red prop", "blu prop"
+    };
 
     @Override public void runOpMode()
     {
@@ -304,5 +313,130 @@ public class tra3nrex_trueauto_BLU extends LinearOpMode
             gainControl.setGain(gain);
             sleep(20);
         }
+    }
+    private void initTfod() {
+
+        // Create the TensorFlow processor by using a builder.
+        tfod = new TfodProcessor.Builder()
+
+                // Use setModelAssetName() if the TF Model is built in as an asset.
+                // Use setModelFileName() if you have downloaded a custom team model to the Robot Controller.
+                .setModelAssetName(TFOD_MODEL_ASSET)
+                //.setModelFileName(TFOD_MODEL_FILE)
+
+                .setModelLabels(LABELS)
+                //.setIsModelTensorFlow2(true)
+                //.setIsModelQuantized(true)
+                //.setModelInputSize(300)
+                .setModelAspectRatio(16.0 / 9.0)
+
+                .build();
+
+        // Create the vision portal by using a builder.
+        VisionPortal.Builder builder = new VisionPortal.Builder();
+
+        // Set the camera (webcam vs. built-in RC phone camera).
+        if (USE_WEBCAM) {
+            builder.setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"));
+        } else {
+            builder.setCamera(BuiltinCameraDirection.BACK);
+        }
+
+        // Choose a camera resolution. Not all cameras support all resolutions.
+        builder.setCameraResolution(new Size(1280, 720));
+
+        // Enable the RC preview (LiveView).  Set "false" to omit camera monitoring.
+        //builder.enableCameraMonitoring(true);
+
+        // Set the stream format; MJPEG uses less bandwidth than default YUY2.
+        //builder.setStreamFormat(VisionPortal.StreamFormat.YUY2);
+
+        // Choose whether or not LiveView stops if no processors are enabled.
+        // If set "true", monitor shows solid orange screen if no processors enabled.
+        // If set "false", monitor shows camera view without annotations.
+        //builder.setAutoStopLiveView(false);
+
+        // Set and enable the processor.
+        builder.addProcessor(tfod);
+
+        // Build the Vision Portal, using the above settings.
+        visionPortal = builder.build();
+
+        // Set confidence threshold for TFOD recognitions, at any time.
+        tfod.setMinResultConfidence(0.7f);
+
+        // Disable or re-enable the TFOD processor at any time.
+        //visionPortal.setProcessorEnabled(tfod, true);
+
+    }   // end method initTfod()
+    boolean forNotDone = true;
+
+    /**
+     * Add telemetry about TensorFlow Object Detection (TFOD) recognitions.
+     */
+    private void telemetryTfod() {
+
+        List<Recognition> currentRecognitions = tfod.getRecognitions();
+        telemetry.addData("# Objects Detected", currentRecognitions.size());
+
+        // Step through the list of recognitions and display info for each one.
+        if(forNotDone != false){
+            for (Recognition recognition : currentRecognitions) {
+                double x = (recognition.getLeft() + recognition.getRight()) / 2;
+                double y = (recognition.getTop() + recognition.getBottom()) / 2;
+
+                telemetry.addData("", " ");
+                telemetry.addData("Image", "%s (%.0f %% Conf.)", recognition.getLabel(), recognition.getConfidence() * 100);
+                telemetry.addData("- Position", "%.0f / %.0f", x, y);
+                telemetry.addData("- Size", "%.0f x %.0f", recognition.getWidth(), recognition.getHeight());
+                if (/*recognition.getLabel() == "red prop" || recognition.getLabel() == "blu prop"  && */x > 100 && x < 300 && forNotDone == true) {
+                    leftFrontDrive.setPower(1);
+                    leftBackDrive.setPower(1);
+                    rightBackDrive.setPower(.5);
+                    rightFrontDrive.setPower(.5);
+                    sleep(410);
+                    leftFrontDrive.setPower(0);
+                    leftBackDrive.setPower(0);
+                    rightBackDrive.setPower(0);
+                    rightFrontDrive.setPower(0);
+                    forNotDone = false;
+                    break;
+                } else if (/*recognition.getLabel() == "red prop" || recognition.getLabel() == "blu prop"  && */x > 400 && x < 700 && forNotDone == true) {
+
+                    leftFrontDrive.setPower(1);
+                    leftBackDrive.setPower(1);
+                    rightBackDrive.setPower(1);
+                    rightFrontDrive.setPower(1);
+                    sleep(405);
+                    leftFrontDrive.setPower(0);
+                    leftBackDrive.setPower(0);
+                    rightBackDrive.setPower(0);
+                    rightFrontDrive.setPower(0);
+                    forNotDone = false;
+                    break;
+                } else if (/*recognition.getLabel() == "red prop" || recognition.getLabel() == "blu prop"  && */x > 800 && x < 1200 && forNotDone == true) {
+                    leftFrontDrive.setPower(.5);
+                    leftBackDrive.setPower(.5);
+                    rightBackDrive.setPower(1);
+                    rightFrontDrive.setPower(1);
+                    sleep(410);
+                    leftFrontDrive.setPower(0);
+                    leftBackDrive.setPower(0);
+                    rightBackDrive.setPower(0);
+                    rightFrontDrive.setPower(0);
+                    forNotDone = false;
+                    break;
+                } else {
+                    leftFrontDrive.setPower(0);
+                    leftBackDrive.setPower(0);
+                    rightBackDrive.setPower(0);
+                    rightFrontDrive.setPower(0);
+                }
+            }
+
+        }   // end for() loop
+
+
+
     }
 }
