@@ -56,10 +56,11 @@ import java.util.List;
 public class tra3nrex_tfod extends LinearOpMode {
 
     private static final boolean USE_WEBCAM = true;  // true for webcam, false for phone camera
-    private DcMotor leftFrontDrive = null;
-    private DcMotor leftBackDrive = null;
+    private DcMotor leftFrontDrive =  null;
+    private DcMotor leftBackDrive =   null;
     private DcMotor rightFrontDrive = null;
-    private DcMotor rightBackDrive = null;
+    private DcMotor rightBackDrive =  null;
+    private DcMotor pixelIntake =     null;
     /**
      * The variable to store our instance of the TensorFlow Object Detection processor.
      */
@@ -80,6 +81,7 @@ public class tra3nrex_tfod extends LinearOpMode {
         leftBackDrive  = hardwareMap.get(DcMotor.class, "left_back_drive");
         rightFrontDrive = hardwareMap.get(DcMotor.class, "right_front_drive");
         rightBackDrive = hardwareMap.get(DcMotor.class, "right_back_drive");
+        pixelIntake = hardwareMap.get(DcMotor.class, "toilet");
         double leftFrontPower; //  = axial + lateral + yaw;
         double rightFrontPower; // = axial - lateral - yaw;
         double leftBackPower;  // = axial - lateral + yaw;
@@ -88,6 +90,7 @@ public class tra3nrex_tfod extends LinearOpMode {
         leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
         rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
         rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
+        pixelIntake.setDirection(DcMotor.Direction.REVERSE);
 
         initTfod();
 
@@ -205,6 +208,7 @@ public class tra3nrex_tfod extends LinearOpMode {
                 leftBackDrive.setPower(1);
                 rightBackDrive.setPower(.5);
                 rightFrontDrive.setPower(.5);
+                pixelIntake.setPower(1);
                 sleep(410);
                 leftFrontDrive.setPower(0);
                 leftBackDrive.setPower(0);
@@ -218,6 +222,7 @@ public class tra3nrex_tfod extends LinearOpMode {
                 leftBackDrive.setPower(1);
                 rightBackDrive.setPower(1);
                 rightFrontDrive.setPower(1);
+                pixelIntake.setPower(1);
                 sleep(405);
                 leftFrontDrive.setPower(0);
                 leftBackDrive.setPower(0);
@@ -230,6 +235,7 @@ public class tra3nrex_tfod extends LinearOpMode {
                 leftBackDrive.setPower(.5);
                 rightBackDrive.setPower(1);
                 rightFrontDrive.setPower(1);
+                pixelIntake.setPower(1);
                 sleep(410);
                 leftFrontDrive.setPower(0);
                 leftBackDrive.setPower(0);
