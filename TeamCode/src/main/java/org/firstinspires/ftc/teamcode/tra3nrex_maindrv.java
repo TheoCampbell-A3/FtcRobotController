@@ -75,20 +75,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 public class tra3nrex_maindrv extends LinearOpMode
 {
-    // Adjust these numbers to suit your robot.
-    final double DESIRED_DISTANCE = 12.0; //  this is how close the camera should get to the target (inches)
-
-    //  Set the GAIN constants to control the relationship between the measured position error, and how much power is
-    //  applied to the drive motors to correct the error.
-    //  Drive = Error * Gain    Make these values smaller for smoother control, or larger for a more aggressive response.
-    final double SPEED_GAIN  =  0.02  ;   //  Forward Speed Control "Gain". eg: Ramp up to 50% power at a 25 inch error.   (0.50 / 25.0)
-    final double STRAFE_GAIN =  0.015 ;   //  Strafe Speed Control "Gain".  eg: Ramp up to 25% power at a 25 degree Yaw error.   (0.25 / 25.0)
-    final double TURN_GAIN   =  0.01  ;   //  Turn Control "Gain".  eg: Ramp up to 25% power at a 25 degree error. (0.25 / 25.0)
-
-    final double MAX_AUTO_SPEED = 0.5;   //  Clip the approach speed to this max value (adjust for your robot)
-    final double MAX_AUTO_STRAFE= 0.5;   //  Clip the approach speed to this max value (adjust for your robot)
-    final double MAX_AUTO_TURN  = 0.3;   //  Clip the turn speed to this max value (adjust for your robot)
-
     private DcMotor leftFrontDrive   = null;  //  Used to control the left front drive wheel
     private DcMotor rightFrontDrive  = null;  //  Used to control the right front drive wheel
     private DcMotor leftBackDrive    = null;  //  Used to control the left back drive wheel
@@ -154,7 +140,7 @@ public class tra3nrex_maindrv extends LinearOpMode
 
             double leftHandPower = 1.0;
             double rightHandPower = 1.0;
-            if (gamepad1.right_bumper && toggle) {
+            /*if (gamepad1.right_bumper && toggle) {
                 leftHandPower = 0.4;
                 toggle = false;
                 bState = true;
@@ -170,7 +156,7 @@ public class tra3nrex_maindrv extends LinearOpMode
                 leftHandPower = 1.0;
                 toggle = true;
                 bState = false;
-            }
+            }*/
             if (gamepad1.left_bumper && toggle == true) {
                 rightHandPower = 0.4;
                 toggle = false;

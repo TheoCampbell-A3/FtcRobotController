@@ -86,10 +86,10 @@ public class tra3nrex_tfod extends LinearOpMode {
         double rightFrontPower; // = axial - lateral - yaw;
         double leftBackPower;  // = axial - lateral + yaw;
         double rightBackPower;
-        leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
-        leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
-        rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
-        rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
+        leftFrontDrive.setDirection(DcMotor.Direction.FORWARD);
+        leftBackDrive.setDirection(DcMotor.Direction.FORWARD);
+        rightFrontDrive.setDirection(DcMotor.Direction.REVERSE);
+        rightBackDrive.setDirection(DcMotor.Direction.REVERSE);
         pixelIntake.setDirection(DcMotor.Direction.REVERSE);
 
         initTfod();
@@ -214,6 +214,7 @@ public class tra3nrex_tfod extends LinearOpMode {
                 leftBackDrive.setPower(0);
                 rightBackDrive.setPower(0);
                 rightFrontDrive.setPower(0);
+                pixelIntake.setPower(0);
                 forNotDone = false;
                 break;
             } else if (/*recognition.getLabel() == "red prop" || recognition.getLabel() == "blu prop"  && */x > 400 && x < 700 && forNotDone == true) {
@@ -228,6 +229,7 @@ public class tra3nrex_tfod extends LinearOpMode {
                 leftBackDrive.setPower(0);
                 rightBackDrive.setPower(0);
                 rightFrontDrive.setPower(0);
+                pixelIntake.setPower(0);
                 forNotDone = false;
                 break;
             } else if (/*recognition.getLabel() == "red prop" || recognition.getLabel() == "blu prop"  && */x > 800 && x < 1200 && forNotDone == true) {
@@ -241,6 +243,7 @@ public class tra3nrex_tfod extends LinearOpMode {
                 leftBackDrive.setPower(0);
                 rightBackDrive.setPower(0);
                 rightFrontDrive.setPower(0);
+                pixelIntake.setPower(0);
                 forNotDone = false;
                 break;
             } else {
@@ -248,6 +251,7 @@ public class tra3nrex_tfod extends LinearOpMode {
                 leftBackDrive.setPower(0);
                 rightBackDrive.setPower(0);
                 rightFrontDrive.setPower(0);
+                pixelIntake.setPower(0);
             }
         }
 
