@@ -209,7 +209,7 @@ public class tra3nrex_tfod extends LinearOpMode {
                 rightBackDrive.setPower(.5);
                 rightFrontDrive.setPower(.5);
                 pixelIntake.setPower(1);
-                sleep(410);
+                sleep(400);
                 leftFrontDrive.setPower(0);
                 leftBackDrive.setPower(0);
                 rightBackDrive.setPower(0);
@@ -224,7 +224,7 @@ public class tra3nrex_tfod extends LinearOpMode {
                 rightBackDrive.setPower(1);
                 rightFrontDrive.setPower(1);
                 pixelIntake.setPower(1);
-                sleep(405);
+                sleep(400);
                 leftFrontDrive.setPower(0);
                 leftBackDrive.setPower(0);
                 rightBackDrive.setPower(0);
@@ -238,7 +238,7 @@ public class tra3nrex_tfod extends LinearOpMode {
                 rightBackDrive.setPower(1);
                 rightFrontDrive.setPower(1);
                 pixelIntake.setPower(1);
-                sleep(410);
+                sleep(400);
                 leftFrontDrive.setPower(0);
                 leftBackDrive.setPower(0);
                 rightBackDrive.setPower(0);

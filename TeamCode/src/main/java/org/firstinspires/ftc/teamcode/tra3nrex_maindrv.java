@@ -83,8 +83,6 @@ public class tra3nrex_maindrv extends LinearOpMode
     private DcMotor pixelArm         = null;
     private Servo leftHand = null;
     private Servo rightHand = null;
-    private DistanceSensor sensorDistance;
-    private TouchSensor sensorTouch;
     boolean toggle = false;
     boolean bState = false;
     double pixelIntakePower = 0;
@@ -114,9 +112,6 @@ public class tra3nrex_maindrv extends LinearOpMode
         pixelArm = hardwareMap.get(DcMotor.class, "flytrap");
         leftHand = hardwareMap.get(Servo.class, "left_hand");
         rightHand = hardwareMap.get(Servo.class, "right_hand");
-        sensorDistance = hardwareMap.get(DistanceSensor.class, "sensor_distance");
-        sensorTouch = hardwareMap.get(TouchSensor.class, "sensor_touch2");
-
         // To drive forward, most robots need the motor on one side to be reversed, because the axles point in opposite directions.
         // When run, this OpMode should start both motors driving forward. So adjust these two lines based on your first test drive.
         // Note: The settings here assume direct drive on left and right wheels.  Gear Reduction or 90 Deg drives may require direction flips
@@ -190,22 +185,16 @@ public class tra3nrex_maindrv extends LinearOpMode
                 drive = -gamepad1.left_stick_y / 1.0;  // Reduce drive rate to 50%.
                 strafe = -gamepad1.left_stick_x / 1.0;  // Reduce strafe rate to 50%.
                 turn = gamepad1.right_stick_x / 1.5;  // Reduce turn rate to 33%.
-                telemetry.addData("Manual", "Drive %5.2f, Strafe %5.2f, Turn %5.2f ", drive, strafe, turn);
+
             } else {
 
                 // drive using manual POV Joystick mode.  Slow things down to make the robot more controlable.
                 drive = -gamepad1.left_stick_y / 2.0;  // Reduce drive rate to 50%.
                 strafe = -gamepad1.left_stick_x / 2.0;  // Reduce strafe rate to 50%.
                 turn = gamepad1.right_stick_x / 3.0;  // Reduce turn rate to 33%.
-                telemetry.addData("Manual", "Drive %5.2f, Strafe %5.2f, Turn %5.2f ", drive, strafe, turn);
+
             }
-            telemetry.addData("range", String.format("%.01f cm", sensorDistance.getDistance(DistanceUnit.CM)));
-            if (sensorTouch.isPressed()) {
-                telemetry.addData("Touch Sensor", "Is Pressed");
-            } else {
-                telemetry.addData("Touch Sensor", "Is Not Pressed");
-            }
-            telemetry.update();
+
 
             // Apply desired axes motions to the drivetrain.
             moveRobot(drive, strafe, turn);
